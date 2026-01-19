@@ -1,0 +1,21 @@
+﻿@model RecruitmentSystem.Models.JobApplication
+
+<h2>Conduct Exam</h2>
+<hr />
+
+<div class="card p-3">
+    <p><b>Candidate Name:</b> @Model.User?.Name</p>
+    <p><b>Email:</b> @Model.User?.Email</p>
+
+    <form asp-action="ConductExam" method="post">
+        <input type="hidden" name="jobApplicationId" value="@Model.JobApplicationId" />
+
+        <div class="mb-2">
+            <label>Google Form Link</label>
+            <input type="text" name="googleFormLink" class="form-control" placeholder="Paste Google Form link here" />
+        </div>
+
+        <button class="btn btn-success mt-2">Send Exam Link</button>
+        <a asp-action="Candidates" class="btn btn-secondary mt-2">Back</a>
+    </form>
+</div>

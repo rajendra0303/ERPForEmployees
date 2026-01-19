@@ -1,0 +1,32 @@
+﻿@model RecruitmentSystem.ViewModels.LeaveApplyVM
+
+<h2>Apply Leave</h2>
+<hr />
+
+<form asp-action="ApplyLeave" method="post">
+
+    <div class="mb-2">
+        <label>From Date</label>
+        <input asp-for="FromDate" type="date" class="form-control" />
+        <span asp-validation-for="FromDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-2">
+        <label>To Date</label>
+        <input asp-for="ToDate" type="date" class="form-control" />
+        <span asp-validation-for="ToDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-2">
+        <label>Reason</label>
+        <textarea asp-for="Reason" class="form-control"></textarea>
+        <span asp-validation-for="Reason" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-success mt-2">Submit Leave</button>
+    <a asp-action="Dashboard" class="btn btn-secondary mt-2">Back</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

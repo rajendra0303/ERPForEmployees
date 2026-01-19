@@ -1,0 +1,75 @@
+﻿@model List<RecruitmentSystem.Models.LeaveRequest>
+
+@{
+    var emp = ViewBag.Employee as RecruitmentSystem.Models.Employee;
+}
+
+<h2>Employee Dashboard</h2>
+<hr />
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success">@TempData["success"]</div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger">@TempData["error"]</div>
+}
+
+@if (emp != null)
+{
+    <div class="card p-3 mb-3">
+        <h5>Welcome, @emp.User?.Name</h5>
+        <p><b>Employee Code:</b> @emp.EmployeeCode</p>
+        <p><b>Department:</b> @emp.Department</p>
+
+        <a asp-action="ApplyLeave" class="btn btn-primary">Apply Leave</a>
+        <a asp-action="MyLeaves" class="btn btn-success">My Leaves</a>
+    </div>
+}
+
+<h4>Recent Leaves</h4>
+
+@if (Model.Count == 0)
+{
+    <p>No leave requests found.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Applied On</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var leave in Model)
+            {
+                <tr>
+                    <td>@leave.FromDate.ToString("dd-MMM-yyyy")</td>
+                    <td>@leave.ToDate.ToString("dd-MMM-yyyy")</td>
+                    <td>@leave.Reason</td>
+                    <td>
+                        @if (leave.Status == "Approved")
+                        {
+                            <span class="badge bg-success">Approved</span>
+                        }
+                        else if (leave.Status == "Rejected")
+                        {
+                            <span class="badge bg-danger">Rejected</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        }
+                    </td>
+                    <td>@leave.AppliedAt.ToString("dd-MMM-yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

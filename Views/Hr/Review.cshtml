@@ -1,0 +1,34 @@
+﻿@model RecruitmentSystem.ViewModels.HrCandidateReviewVM
+
+<h2>Review Candidate</h2>
+<hr />
+
+<div class="mb-2">
+    <b>Candidate:</b> @ViewBag.CandidateName
+</div>
+
+<div class="mb-2">
+    <b>Resume:</b>
+    <a href="@ViewBag.ResumePath" target="_blank" class="btn btn-sm btn-success">View Resume</a>
+</div>
+
+<form asp-action="Review" method="post">
+    <input type="hidden" asp-for="JobApplicationId" />
+
+    <div class="mb-2">
+        <label>Status</label>
+        <select asp-for="Status" class="form-control">
+            <option value="Reviewed">Reviewed</option>
+            <option value="Selected">Selected</option>
+            <option value="Rejected">Rejected</option>
+        </select>
+    </div>
+
+    <div class="mb-2">
+        <label>HR Remarks</label>
+        <textarea asp-for="HRRemarks" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-primary mt-2">Submit Review</button>
+    <a asp-action="Candidates" class="btn btn-secondary mt-2">Back</a>
+</form>

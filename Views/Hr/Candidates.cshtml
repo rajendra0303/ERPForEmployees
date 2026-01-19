@@ -1,0 +1,91 @@
+﻿@model List<RecruitmentSystem.Models.JobApplication>
+
+<h2>Candidate Applications</h2>
+<hr />
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success">@TempData["success"]</div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger">@TempData["error"]</div>
+}
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Status</th>
+            <th>Resume</th>
+            <th>Action</th>
+            <th>Exam</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.User?.Name</td>
+                <td>@item.User?.Email</td>
+                <td>@item.User?.Mobile</td>
+                <td>
+                    <span class="badge bg-info">@item.Status</span>
+                </td>
+                <td>
+                    <a href="@item.ResumePath" target="_blank" class="btn btn-sm btn-success">
+                        View Resume
+                    </a>
+                </td>
+                <td>
+                    <a asp-action="Review" asp-route-id="@item.JobApplicationId" class="btn btn-sm btn-warning">
+                        Review
+                    </a>
+                </td>
+                <td>
+                    @if (item.Status == "Selected")
+                    {
+                        <a asp-action="ConductExam" asp-route-id="@item.JobApplicationId" class="btn btn-sm btn-primary">
+                            Conduct Exam
+                        </a>
+                    }
+                    else if (item.Status == "ExamSent")
+                    {
+                        <span class="badge bg-success">Exam Sent</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">N/A</span>
+                    }
+                </td>
+            </tr>
+        <td>
+            @if (item.Status == "Selected")
+            {
+                <a asp-action="ConductExam" asp-route-id="@item.JobApplicationId" class="btn btn-sm btn-primary">
+                    Conduct Exam
+                </a>
+            }
+            else if (item.Status == "ExamSent")
+            {
+                <a asp-action="CheckExamResult" asp-route-id="@item.JobApplicationId" class="btn btn-sm btn-success">
+                    Check Result
+                </a>
+            }
+            else if (item.Status == "EmployeeCreated")
+            {
+                <span class="badge bg-success">Employee Created</span>
+            }
+            else
+            {
+                <span class="text-muted">N/A</span>
+            }
+        </td>
+
+        }
+
+    </tbody>
+</table>
