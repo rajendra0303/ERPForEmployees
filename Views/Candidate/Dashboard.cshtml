@@ -1,0 +1,46 @@
+﻿@model RecruitmentSystem.Models.JobApplication
+
+@{
+    ViewData["Title"] = "Candidate Dashboard";
+}
+
+<h2>Candidate Dashboard</h2>
+<hr />
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success">@TempData["success"]</div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger">@TempData["error"]</div>
+}
+
+@if (Model == null)
+{
+    <div class="card p-3">
+        <h5>You have not applied for any job yet.</h5>
+        <a asp-action="ApplyJob" class="btn btn-primary mt-2">Apply Job</a>
+    </div>
+}
+else
+{
+    <div class="card p-3">
+        <h5>My Job Application</h5>
+        <p><b>Status:</b> <span class="badge bg-info">@Model.Status</span></p>
+
+        <p><b>Applied On:</b> @Model.AppliedAt.ToString("dd-MMM-yyyy")</p>
+
+        <p>
+            <b>Resume:</b>
+            <a href="@Model.ResumePath" target="_blank" class="btn btn-sm btn-success">
+                View / Download Resume
+            </a>
+        </p>
+
+        @if (!string.IsNullOrEmpty(Model.HRRemarks))
+        {
+            <p><b>HR Remarks:</b> @Model.HRRemarks</p>
+        }
+    </div>
+}
