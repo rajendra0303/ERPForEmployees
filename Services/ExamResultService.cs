@@ -22,23 +22,24 @@ namespace RecruitmentSystem.Services
             var response = await _httpClient.GetAsync(url);
             var raw = await response.Content.ReadAsStringAsync();
 
-            // ✅ If HTML comes, stop parsing
+            // ✅ if HTML came
             if (raw.TrimStart().StartsWith("<"))
                 return (null, raw);
 
+            ExamResultDto? obj = null;
             try
             {
-                var obj = JsonSerializer.Deserialize<ExamResultDto>(
+                obj = JsonSerializer.Deserialize<ExamResultDto>(
                     raw,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
                 );
-
-                return (obj, raw);
             }
             catch
             {
-                return (null, raw);
+                obj = null;
             }
+
+            return (obj, raw);
         }
     }
 }

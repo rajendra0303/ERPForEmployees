@@ -174,9 +174,9 @@ namespace RecruitmentSystem.Controllers
         }
         // ✅ GET: /Hr/CheckExamResult/5
         public async Task<IActionResult> CheckExamResult(int id,
-            [FromServices] RecruitmentSystem.Services.ExamResultService examService)
+    [FromServices] ExamResultService examService)
         {
-            if (GetRole() != "HR")
+            if (HttpContext.Session.GetString("UserRole") != "HR")
                 return RedirectToAction("Login", "Account");
 
             var application = await _db.JobApplications
@@ -193,80 +193,60 @@ namespace RecruitmentSystem.Controllers
                 return RedirectToAction("Candidates");
             }
 
+            // ✅ Call API
             var (result, raw) = await examService.GetExamResultByEmailAsync(application.User!.Email);
+
+            
 
             if (result == null)
             {
-                TempData["error"] = "Exam API did not return JSON. Raw Response: " + raw;
+                TempData["error"] = "API did not return JSON. RAW=" + raw;
                 return RedirectToAction("Candidates");
             }
 
-
-            if (result == null || !string.IsNullOrEmpty(result.error))
+            if (!string.IsNullOrEmpty(result.error))
             {
-                TempData["error"] = "Result not found. Candidate may not have submitted exam yet.";
+                TempData["error"] = "API ERROR=" + result.error + " RAW=" + raw;
                 return RedirectToAction("Candidates");
             }
 
-            // Update ExamInvite table
+            // ✅ Update ExamInvite
             application.ExamInvite.IsSubmitted = true;
             application.ExamInvite.CorrectAnswers = result.score;
 
-            // ✅ PASS/FAIL logic
             if (result.score >= 8)
             {
                 application.ExamInvite.ResultStatus = "Pass";
 
-                // Convert to Employee
-                application.Status = "EmployeeCreated";
-
-                // update user role
-                application.User.Role = "Employee";
-
-                // Create Employee entry
-                var emp = new Employee
+                // Duplicate check
+                bool alreadyEmp = await _db.Employees.AnyAsync(e => e.UserId == application.User.UserId);
+                if (!alreadyEmp)
                 {
-                    UserId = application.User.UserId,
-                    EmployeeCode = "EMP" + new Random().Next(1000, 9999),
-                    JoiningDate = DateTime.Now,
-                    Department = "IT"
-                };
+                    application.Status = "EmployeeCreated";
+                    application.User.Role = "Employee";
 
-                _db.Employees.Add(emp);
+                    var emp = new Employee
+                    {
+                        UserId = application.User.UserId,
+                        EmployeeCode = "EMP" + new Random().Next(1000, 9999),
+                        JoiningDate = DateTime.Now,
+                        Department = "IT"
+                    };
+
+                    _db.Employees.Add(emp);
+                }
 
                 await _db.SaveChangesAsync();
 
-                // Email
-                await _emailService.SendEmailAsync(application.User.Email,
-                    "Congratulations! You are Selected",
-                    $@"
-            <h3>Hello {application.User.Name},</h3>
-            <p>Congratulations! You scored <b>{result.score}/10</b>.</p>
-            <p>You are now selected as Employee.</p>
-            <p>Your Employee Code: <b>{emp.EmployeeCode}</b></p>
-            <p>You can now login using your same email and password.</p>
-            <br/>
-            <p>Thanks,<br/>HR Team</p>");
-
-                TempData["success"] = $"Candidate passed ({result.score}/10). Employee created successfully!";
+                TempData["success"] = $"PASS! Score={result.score}/10. Employee Created!";
             }
             else
             {
                 application.ExamInvite.ResultStatus = "Fail";
                 application.Status = "Rejected";
-
                 await _db.SaveChangesAsync();
 
-                await _emailService.SendEmailAsync(application.User.Email,
-                    "Exam Result - Not Selected",
-                    $@"
-            <h3>Hello {application.User.Name},</h3>
-            <p>You scored <b>{result.score}/10</b>.</p>
-            <p>Unfortunately you did not qualify.</p>
-            <br/>
-            <p>Thanks,<br/>HR Team</p>");
-
-                TempData["error"] = $"Candidate failed ({result.score}/10). Application rejected.";
+                TempData["error"] = $"FAIL! Score={result.score}/10. Candidate rejected.";
             }
 
             return RedirectToAction("Candidates");
