@@ -16,9 +16,11 @@ namespace RecruitmentSystem.Models
         public string? ResumeFileName { get; set; }
 
         [Required, StringLength(30)]
+
         public string Status { get; set; } = "Applied";
         // Applied, Reviewed, Selected, Rejected, ExamSent, EmployeeCreated
-
+        [Required, StringLength(50)]
+        public string JobRole { get; set; } = string.Empty;
         [StringLength(300)]
         public string? HRRemarks { get; set; }
 
