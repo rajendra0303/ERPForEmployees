@@ -4,30 +4,202 @@
     ViewData["Title"] = "Login";
 }
 
-<h2>Login</h2>
-<hr />
+<style>
+    .login-shell {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f7fafc;
+        padding: 24px 12px;
+    }
 
-@if (TempData["success"] != null)
-{
-    <div class="alert alert-success">@TempData["success"]</div>
-}
+    .login-card {
+        width: min(1000px, 100%);
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 24px 45px rgba(0,0,0,.12);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
 
-<form asp-action="Login" method="post">
-    <div class="mb-2">
-        <label>Email</label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+    .login-left {
+        padding: 32px 36px;
+    }
+
+    .login-right {
+        background: linear-gradient(135deg, #1ba69a, #0f7fc4);
+        color: #fff;
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 12px;
+        position: relative;
+    }
+
+    .login-right::before {
+        content: "";
+        position: absolute;
+        inset: 18px;
+        border: 1px solid rgba(255,255,255,.25);
+        border-radius: 12px;
+        pointer-events: none;
+    }
+
+    .social-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 14px;
+    }
+
+    .social-btn {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .social-fb { background: #3b5998; }
+    .social-g  { background: #db4437; }
+    .social-ln { background: #0077b5; }
+
+    .login-input {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 14px;
+    }
+
+    .login-input:focus {
+        border-color: #0f7fc4;
+        box-shadow: 0 0 0 2px rgba(15,127,196,.2);
+    }
+
+    .login-btn {
+        background: #11a189;
+        border: none;
+        color: #fff;
+        font-weight: 700;
+        padding: 12px 16px;
+        border-radius: 999px;
+        width: 100%;
+        box-shadow: 0 14px 30px rgba(17,161,137,.25);
+    }
+
+    .login-btn:hover {
+        background: #0e8c77;
+        color: #fff;
+    }
+
+    .muted {
+        color: #6b7280;
+    }
+
+    .or-divider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #9ca3af;
+        font-size: 0.85rem;
+        margin: 14px 0;
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e5e7eb;
+    }
+
+    .login-right h3 {
+        font-weight: 800;
+    }
+
+    .login-right p {
+        color: rgba(255,255,255,.9);
+    }
+
+    .login-right .btn-light {
+        border-radius: 999px;
+        padding: 10px 20px;
+        font-weight: 700;
+    }
+
+    @@media (max-width: 576px) {
+        .login-left { padding: 24px; }
+        .login-right { display: none; }
+        .login-shell { padding: 12px; }
+    }
+</style>
+
+<div class="login-shell">
+    <div class="login-card">
+        <div class="login-left">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <div class="fw-bold text-secondary">ERPForEmployees</div>
+            </div>
+
+            <h3 class="fw-bold">Login to Your Account</h3>
+            <p class="text-muted mb-3">Login using social networks</p>
+
+            <div class="social-row">
+                <button type="button" class="social-btn social-fb">f</button>
+                <button type="button" class="social-btn social-g">G+</button>
+                <button type="button" class="social-btn social-ln">in</button>
+            </div>
+
+            <div class="or-divider">or</div>
+
+            @if (TempData["success"] != null)
+            {
+                <div class="alert alert-success py-2">@TempData["success"]</div>
+            }
+            @if (TempData["error"] != null)
+            {
+                <div class="alert alert-danger py-2">@TempData["error"]</div>
+            }
+
+            <form asp-action="Login" method="post" class="mt-2">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control login-input" autocomplete="username" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control login-input" autocomplete="current-password" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <button class="login-btn mb-3" type="submit">Sign In</button>
+
+                <div class="text-center muted">
+                    New here?
+                    <a asp-action="Register" class="fw-semibold">Sign up</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="login-right">
+            <h3>New Here?</h3>
+            <p>Sign up and discover a great amount of new opportunities!</p>
+            <a asp-action="Register" class="btn btn-light">Sign Up</a>
+        </div>
     </div>
-
-    <div class="mb-2">
-        <label>Password</label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <button class="btn btn-primary mt-2">Login</button>
-    <a asp-action="Register" class="btn btn-link">New Candidate? Register</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

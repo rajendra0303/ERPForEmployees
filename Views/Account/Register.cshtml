@@ -4,43 +4,147 @@
     ViewData["Title"] = "Register";
 }
 
-<h2>Candidate Registration</h2>
-<hr />
+<style>
+    .register-shell {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f7fafc;
+        padding: 24px 12px;
+    }
 
-<form asp-action="Register" method="post">
-    <div class="mb-2">
-        <label>Name</label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+    .register-card {
+        width: min(1000px, 100%);
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 24px 45px rgba(0,0,0,.12);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+
+    .register-left {
+        padding: 32px 36px;
+    }
+
+    .register-right {
+        background: linear-gradient(135deg, #1ba69a, #0f7fc4);
+        color: #fff;
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 12px;
+        position: relative;
+    }
+
+    .register-right::before {
+        content: "";
+        position: absolute;
+        inset: 18px;
+        border: 1px solid rgba(255,255,255,.25);
+        border-radius: 12px;
+        pointer-events: none;
+    }
+
+    .reg-input {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 14px;
+    }
+
+    .reg-input:focus {
+        border-color: #0f7fc4;
+        box-shadow: 0 0 0 2px rgba(15,127,196,.2);
+    }
+
+    .reg-btn {
+        background: #11a189;
+        border: none;
+        color: #fff;
+        font-weight: 700;
+        padding: 12px 16px;
+        border-radius: 999px;
+        width: 100%;
+        box-shadow: 0 14px 30px rgba(17,161,137,.25);
+    }
+
+    .reg-btn:hover {
+        background: #0e8c77;
+        color: #fff;
+    }
+
+    .muted {
+        color: #6b7280;
+    }
+
+    @@media (max-width: 576px) {
+        .register-left { padding: 24px; }
+        .register-right { display: none; }
+        .register-shell { padding: 12px; }
+    }
+</style>
+
+<div class="register-shell">
+    <div class="register-card">
+        <div class="register-left">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <div class="fw-bold text-secondary">ERPForEmployees</div>
+            </div>
+
+            <h3 class="fw-bold">Create Your Account</h3>
+            <p class="text-muted mb-3">Sign up to discover new opportunities</p>
+
+            <form asp-action="Register" method="post" class="mt-2">
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input asp-for="Name" class="form-control reg-input" autocomplete="name" />
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control reg-input" autocomplete="email" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mobile</label>
+                    <input asp-for="Mobile" class="form-control reg-input" autocomplete="tel" />
+                    <span asp-validation-for="Mobile" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control reg-input" autocomplete="new-password" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control reg-input" autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+
+                <button class="reg-btn mb-3" type="submit">Sign Up</button>
+
+                <div class="text-center muted">
+                    Already have an account?
+                    <a asp-action="Login" class="fw-semibold">Sign in</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="register-right">
+            <h3>Welcome Back!</h3>
+            <p>To keep connected with us please login with your personal info.</p>
+            <a asp-action="Login" class="btn btn-light">Sign In</a>
+        </div>
     </div>
-
-    <div class="mb-2">
-        <label>Email</label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="mb-2">
-        <label>Mobile</label>
-        <input asp-for="Mobile" class="form-control" />
-        <span asp-validation-for="Mobile" class="text-danger"></span>
-    </div>
-
-    <div class="mb-2">
-        <label>Password</label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div class="mb-2">
-        <label>Confirm Password</label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-
-    <button class="btn btn-success mt-2">Register</button>
-    <a asp-action="Login" class="btn btn-link">Already have account? Login</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

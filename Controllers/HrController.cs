@@ -21,12 +21,40 @@ namespace RecruitmentSystem.Controllers
         private string? GetRole() => HttpContext.Session.GetString("UserRole");
 
         // GET: /Hr/Dashboard
-        public IActionResult Dashboard()
+        public async Task<IActionResult> Dashboard()
         {
             if (GetRole() != "HR")
                 return RedirectToAction("Login", "Account");
 
-            return View();
+            var apps = _db.JobApplications.AsNoTracking();
+
+            // role counts
+            int aspNet = await apps.CountAsync(a => a.JobRole == "ASP.NET Developer");
+            int java = await apps.CountAsync(a => a.JobRole == "Java Developer");
+            int aiMl = await apps.CountAsync(a => a.JobRole == "AI/ML Developer");
+
+            // status counts
+            int total = await apps.CountAsync();
+            int applied = await apps.CountAsync(a => a.Status == "Applied");
+            int selected = await apps.CountAsync(a => a.Status == "Selected");
+            int rejected = await apps.CountAsync(a => a.Status == "Rejected");
+            int examSent = await apps.CountAsync(a => a.Status == "ExamSent");
+            int employeeCreated = await apps.CountAsync(a => a.Status == "EmployeeCreated");
+
+            var vm = new HrDashboardVM
+            {
+                TotalApplications = total,
+                AspNetDeveloperCount = aspNet,
+                JavaDeveloperCount = java,
+                AiMlDeveloperCount = aiMl,
+                AppliedCount = applied,
+                SelectedCount = selected,
+                RejectedCount = rejected,
+                ExamSentCount = examSent,
+                EmployeeCreatedCount = employeeCreated
+            };
+
+            return View(vm);
         }
 
         // ✅ GET: /Hr/Candidates

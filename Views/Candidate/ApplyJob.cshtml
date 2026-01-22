@@ -8,6 +8,16 @@
 <hr />
 
 <form asp-action="ApplyJob" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label class="form-label">Job Role</label>
+        <select asp-for="JobRole" class="form-select">
+            <option value="">-- Select Role --</option>
+            <option value="ASP.NET Developer">ASP.NET Developer</option>
+            <option value="Java Developer">Java Developer</option>
+            <option value="AI/ML Developer">AI/ML Developer</option>
+        </select>
+        <span asp-validation-for="JobRole" class="text-danger"></span>
+    </div>
 
     <div class="mb-3">
         <label class="form-label">Upload Resume (PDF/DOC/DOCX)</label>
