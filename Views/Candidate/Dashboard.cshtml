@@ -4,8 +4,12 @@
     ViewData["Title"] = "Candidate Dashboard";
 }
 
-<h2>Candidate Dashboard</h2>
-<hr />
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+    <div>
+        <h2 class="mb-0">Candidate Dashboard</h2>
+        <small class="text-muted">Review your application status or apply for a role.</small>
+    </div>
+</div>
 
 @if (TempData["success"] != null)
 {
@@ -18,29 +22,82 @@
 
 @if (Model == null)
 {
-    <div class="card p-3">
-        <h5>You have not applied for any job yet.</h5>
-        <a asp-action="ApplyJob" class="btn btn-primary mt-2">Apply Job</a>
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-2">You have not applied for any job yet.</h5>
+            <p class="text-muted mb-3">Choose a role below to begin your application.</p>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 bg-light">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-warning text-dark me-2">ASP.NET</span>
+                                <strong>Developer</strong>
+                            </div>
+                            <ul class="small text-muted mb-3">
+                                <li>Build secure, scalable web apps</li>
+                                <li>ASP.NET Core, EF Core, SQL Server</li>
+                                <li>CI/CD and cloud deployment</li>
+                            </ul>
+                            <a asp-action="ApplyJob" asp-route-jobRole="ASP.NET Developer" class="btn btn-primary w-100">Apply as ASP.NET Developer</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 bg-light">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-danger me-2">Java</span>
+                                <strong>Developer</strong>
+                            </div>
+                            <ul class="small text-muted mb-3">
+                                <li>API and microservice development</li>
+                                <li>Spring Boot, Hibernate, REST</li>
+                                <li>Testing and performance tuning</li>
+                            </ul>
+                            <a asp-action="ApplyJob" asp-route-jobRole="Java Developer" class="btn btn-primary w-100">Apply as Java Developer</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 bg-light">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-info text-dark me-2">AI/ML</span>
+                                <strong>Developer</strong>
+                            </div>
+                            <ul class="small text-muted mb-3">
+                                <li>Model development and deployment</li>
+                                <li>Python, ML pipelines, MLOps</li>
+                                <li>Data engineering collaboration</li>
+                            </ul>
+                            <a asp-action="ApplyJob" asp-route-jobRole="AI/ML Developer" class="btn btn-primary w-100">Apply as AI/ML Developer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 }
 else
 {
-    <div class="card p-3">
-        <h5>My Job Application</h5>
-        <p><b>Status:</b> <span class="badge bg-info">@Model.Status</span></p>
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">My Job Application</h5>
+            <p class="mb-2"><b>Status:</b> <span class="badge bg-info text-dark">@Model.Status</span></p>
+            <p class="mb-2"><b>Applied On:</b> @Model.AppliedAt.ToString("dd-MMM-yyyy")</p>
+            <p class="mb-3">
+                <b>Resume:</b>
+                <a href="@Model.ResumePath" target="_blank" class="btn btn-sm btn-success">
+                    View / Download Resume
+                </a>
+            </p>
 
-        <p><b>Applied On:</b> @Model.AppliedAt.ToString("dd-MMM-yyyy")</p>
-
-        <p>
-            <b>Resume:</b>
-            <a href="@Model.ResumePath" target="_blank" class="btn btn-sm btn-success">
-                View / Download Resume
-            </a>
-        </p>
-
-        @if (!string.IsNullOrEmpty(Model.HRRemarks))
-        {
-            <p><b>HR Remarks:</b> @Model.HRRemarks</p>
-        }
+            @if (!string.IsNullOrEmpty(Model.HRRemarks))
+            {
+                <p class="mb-0"><b>HR Remarks:</b> @Model.HRRemarks</p>
+            }
+        </div>
     </div>
 }

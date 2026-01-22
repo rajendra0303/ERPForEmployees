@@ -9,55 +9,57 @@
     <link rel="stylesheet" href="~/ERPForEmployees.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <style>
+        .app-header {
+            border-bottom: 1px solid #e5e7eb;
+            background: #fff;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
 
-            <div class="container-fluid">
-               
+        .app-brand {
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #0f172a;
+            margin: 0;
+        }
 
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ERPForEmployees</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            @if (Context.Session.GetString("UserRole") == "Employee")
-            {
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Employee" asp-action="Dashboard">Employee Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Employee" asp-action="ApplyLeave">Apply Leave</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Employee" asp-action="MyLeaves">My Leaves</a>
-                </li>
-            }
+        .app-logout {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
-        </nav>
+        .app-main {
+            width: 100%;
+            padding: 0;
+        }
+    </style>
+
+    <header class="app-header">
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="text-decoration-none">
+            <h4 class="app-brand mb-0">ERPForEmployees</h4>
+        </a>
+        @if (Context.Session.GetInt32("UserId") != null)
+        {
+            <a class="app-logout nav-link text-danger" asp-controller="Account" asp-action="Logout">Logout</a>
+        }
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="container-fluid app-main">
+        <main role="main" class="pb-0">
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - ERPForEmployees - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container-fluid">
+            &copy; 2026 - ERPForEmployees
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

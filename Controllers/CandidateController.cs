@@ -37,7 +37,7 @@ namespace RecruitmentSystem.Controllers
 
         // GET: /Candidate/ApplyJob
         [HttpGet]
-        public async Task<IActionResult> ApplyJob()
+        public async Task<IActionResult> ApplyJob(string? jobRole)
         {
             if (GetUserId() == null || GetRole() != "User")
                 return RedirectToAction("Login", "Account");
@@ -52,7 +52,10 @@ namespace RecruitmentSystem.Controllers
                 return RedirectToAction("Dashboard");
             }
 
-            return View(new ApplyJobVM());
+            return View(new ApplyJobVM
+            {
+                JobRole = jobRole ?? string.Empty
+            });
         }
 
         // POST: /Candidate/ApplyJob
@@ -73,6 +76,12 @@ namespace RecruitmentSystem.Controllers
 
             if (!ModelState.IsValid)
                 return View(model);
+
+            if (string.IsNullOrWhiteSpace(model.JobRole))
+            {
+                ModelState.AddModelError(nameof(model.JobRole), "Please select a job role.");
+                return View(model);
+            }
 
             // ✅ File Validation
             var allowedExtensions = new[] { ".pdf", ".doc", ".docx" };
@@ -105,6 +114,7 @@ namespace RecruitmentSystem.Controllers
                 UserId = userId,
                 ResumePath = "/resumes/" + uniqueName, // url path
                 ResumeFileName = model.ResumeFile.FileName,
+                JobRole = model.JobRole.Trim(),
                 Status = "Applied",
                 AppliedAt = DateTime.Now
             };
